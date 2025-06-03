@@ -21,7 +21,7 @@ for file_name in os.listdir(imageFacesPath):
 ##############################################
 # LEYENDO VIDEO
 #cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 # Detector facial
 faceClassif = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
