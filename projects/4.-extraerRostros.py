@@ -8,7 +8,7 @@
 import cv2
 import os
 
-imagesPath = "C:/Python/pruebasMaestria/proyectoMaestria/9.-sistemasDeVisionArtificial/3er.- parcial/faceID2/images"
+imagesPath = "B:/python/projects/images"
 if not os.path.exists("faces"):
      os.makedirs("faces")
      print("Nueva carpeta: faces")

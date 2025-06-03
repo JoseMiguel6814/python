@@ -1,7 +1,7 @@
 import cv2
 import face_recognition
 
-image = cv2.imread("C:/python/projects/images/yo.jpg")
+image = cv2.imread("B:/python/projects/images/yo.jpg")
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 face_loc = face_recognition.face_locations(image)[0]
 #print("localización de rostros: ", face_loc)
@@ -17,7 +17,9 @@ face_image_encodings = face_recognition.face_encodings(image, known_face_locatio
 
 ######################################################################################
 # Video Streaming
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+#cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
+
 while True:
      ret, frame = cap.read()
      if ret == False: break

@@ -3,7 +3,7 @@ import os
 import face_recognition
 
 # Codificar los rostros extraidos
-imageFacesPath = "C:/Python/pruebasMaestria/proyectoMaestria/9.-sistemasDeVisionArtificial/3er.- parcial/faceID2/faces"
+imageFacesPath = "B:/python/projects/faces"
 
 facesEncodings = []
 facesNames = []
@@ -20,8 +20,8 @@ for file_name in os.listdir(imageFacesPath):
 
 ##############################################
 # LEYENDO VIDEO
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-
+#cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 # Detector facial
 faceClassif = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 

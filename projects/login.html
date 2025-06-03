@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login con FaceID</title>
+</head>
+<body>
+  <h2>Login con cámara</h2>
+  <video id="video" width="480" height="360" autoplay></video>
+  <br>
+  <button id="capturar">Capturar y Enviar</button>
+  <canvas id="canvas" width="480" height="360" style="display:none;"></canvas>
+
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      });
+
+    document.getElementById("capturar").onclick = () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL("image/jpeg");
+
+      fetch("http://localhost:5000/guardar_foto", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ imagen: imageData })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          window.location.href = "success.html";
+        } else {
+          alert("Acceso denegado");
+        }
+      });
+    };
+  </script>
+</body>
+</html>
