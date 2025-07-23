@@ -2,76 +2,94 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login con Reconocimiento Facial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Domótico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #2c3e50;
+            color: white;
         }
-        video {
-            margin-top: 20px;
-            border: 2px solid #444;
-            border-radius: 10px;
+        .camera-container {
+            width: 640px;
+            height: 480px;
+            margin: 0 auto;
+            border: 3px solid #3498db;
+            border-radius: 5px;
         }
-        #mensaje {
-            margin-top: 20px;
-            font-size: 1.2em;
+        #video {
+            width: 100%;
+            height: 100%;
+            background-color: #666;
         }
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 1em;
+        .btn-recognize {
+            background-color: #16a085;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <h1>Inicio de Sesión Facial</h1>
-    <video id="video" width="480" height="360" autoplay></video><br>
-    <button onclick="capture()">Iniciar sesión con rostro</button>
-    <canvas id="canvas" style="display: none;"></canvas>
-    <p id="mensaje"></p>
+    <div class="container text-center py-5">
+        <h1 class="mb-4">Sistema Domótico</h1>
+        <h3 class="mb-5">Login por Reconocimiento Facial</h3>
+        
+        <div class="camera-container mb-4">
+            <video id="video" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+        
+        <button id="recognizeBtn" class="btn btn-recognize">
+            INICIAR RECONOCIMIENTO
+        </button>
+    </div>
 
     <script>
-        const video = document.getElementById("video");
-        const canvas = document.getElementById("canvas");
-        const mensaje = document.getElementById("mensaje");
-
-        // Solicita acceso a la cámara
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const recognizeBtn = document.getElementById('recognizeBtn');
+        
+        // Acceder a la cámara
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
             })
             .catch(err => {
-                console.error("Error al acceder a la cámara", err);
-                mensaje.innerHTML = "<span style='color:red;'>No se pudo acceder a la cámara</span>";
+                console.error("Error al acceder a la cámara:", err);
+                alert("No se pudo acceder a la cámara");
             });
-
-        function capture() {
+        
+        // Capturar imagen para reconocimiento
+        recognizeBtn.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-            const image = canvas.toDataURL("image/jpeg");
-
-            fetch("/login_face", {
-                method: "POST",
-                body: JSON.stringify({ image }),
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = canvas.toDataURL('image/jpeg');
+            
+            fetch('/login_face', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
-                }
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ image: imageData })
             })
-            .then(res => res.json())
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    mensaje.innerHTML = `<strong style="color: green;">✅ Bienvenido, ${data.name}!</strong>`;
-                    setTimeout(() => {
-                        window.location.href = "/dashboard";
-                    }, 2000);
+                    window.location.href = '/dashboard';
                 } else {
-                    mensaje.innerHTML = `<strong style="color: red;">❌ Rostro no reconocido. Intenta de nuevo.</strong>`;
+                    alert("Rostro no reconocido. Intente nuevamente.");
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error en el reconocimiento");
             });
-        }
+        });
     </script>
 </body>
 </html>

@@ -18,7 +18,7 @@ face_image_encodings = face_recognition.face_encodings(image, known_face_locatio
 ######################################################################################
 # Video Streaming
 #cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 
 while True:
      ret, frame = cap.read()
